@@ -17,7 +17,7 @@ public class TandemUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findUserByName(username);
+        Optional<User> optionalUser = userRepository.findUserByUsername(username);
         optionalUser.orElseThrow(() -> new UsernameNotFoundException("No such user: " + username + "!"));
         return optionalUser.map(TandemUserDetails::new).get();
     }

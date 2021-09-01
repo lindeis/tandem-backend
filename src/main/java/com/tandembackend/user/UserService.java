@@ -2,6 +2,7 @@ package com.tandembackend.user;
 
 import com.tandembackend.exception.InvalidPasswordException;
 import com.tandembackend.exception.MissingParameterException;
+import com.tandembackend.exception.UsernameTakenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -66,5 +67,13 @@ public class UserService {
         if (!loginRequest.getPassword().equals(userDetails.getPassword())) {
             throw new InvalidPasswordException();
         }
+    }
+
+    public User registerUser(RegisterUserDTO registerUserDTO) throws UsernameTakenException {
+        User u = new User(registerUserDTO.getUsername(), registerUserDTO.getPassword());
+        if (userRepository.findUserByUsername(u.getUsername()).isEmpty()) {
+            throw new UsernameTakenException("The username " + u.getUsername() + " is already taken.");
+        }
+        return userRepository.save(u);
     }
 }

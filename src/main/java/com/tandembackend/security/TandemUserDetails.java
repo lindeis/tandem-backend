@@ -19,7 +19,7 @@ public class TandemUserDetails implements UserDetails {
     private String password;
 
     public TandemUserDetails(User user) {
-        this.username = user.getName();
+        this.username = user.getUsername();
         this.password = user.getPassword();
     }
 
