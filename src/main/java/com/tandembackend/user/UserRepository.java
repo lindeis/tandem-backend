@@ -1,6 +1,5 @@
-package com.tandembackend.repository;
+package com.tandembackend.user;
 
-import com.tandembackend.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

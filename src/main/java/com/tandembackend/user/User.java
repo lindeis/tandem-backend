@@ -1,4 +1,4 @@
-package com.tandembackend.model;
+package com.tandembackend.user;
 
 import lombok.Getter;
 import lombok.Setter;
