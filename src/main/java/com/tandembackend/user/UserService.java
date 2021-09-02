@@ -66,7 +66,7 @@ public class UserService {
     }
 
     private void checkPassword(LoginRequestDTO loginRequest, UserDetails userDetails) throws InvalidPasswordException {
-        if (!loginRequest.getPassword().equals(userDetails.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
             throw new InvalidPasswordException();
         }
     }
