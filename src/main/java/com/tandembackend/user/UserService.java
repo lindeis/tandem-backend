@@ -72,7 +72,7 @@ public class UserService {
     }
 
     public User registerUser(RegisterRequestDTO registerRequestDTO) throws UsernameTakenException {
-        User u = new User(registerRequestDTO.getUsername(), registerRequestDTO.getPassword());
+        User u = new User(registerRequestDTO.getUsername(), passwordEncoder.encode(registerRequestDTO.getPassword()));
         if (!userRepository.findUserByUsername(u.getUsername()).isEmpty()) {
             throw new UsernameTakenException("The username " + u.getUsername() + " is already taken.");
         }
