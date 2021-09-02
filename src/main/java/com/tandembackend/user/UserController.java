@@ -7,10 +7,7 @@ import com.tandembackend.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -33,8 +30,8 @@ public class UserController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<RegistrationSuccessDTO> registerUser(@RequestParam String username, @RequestParam String password) throws UsernameTakenException {
-        User u = userService.registerUser(new RegisterUserDTO(username, password));
+    public @ResponseBody ResponseEntity<RegistrationSuccessDTO> registerUser(@RequestBody RegisterUserDTO regRequest) throws UsernameTakenException {
+        User u = userService.registerUser(regRequest);
         return ResponseEntity.ok(new RegistrationSuccessDTO(u.getUsername()));
     }
 }
