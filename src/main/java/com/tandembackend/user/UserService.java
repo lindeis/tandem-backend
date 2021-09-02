@@ -19,15 +19,14 @@ public class UserService {
 
     private UserRepository userRepository;
     private UserDetailsService userDetailsService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserDetailsService userDetailsService) {
+    public UserService(UserRepository userRepository, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public UserDetails authenticateUser(LoginRequestDTO loginRequest) throws MissingParameterException, InvalidPasswordException {
         readLoginRequest(loginRequest);
