@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,12 +29,12 @@ public class UserController {
         UserDetails userDetails = userService.authenticateUser(loginRequest);
         String token = jwtUtil.generateToken(userDetails.getUsername());
         return ResponseEntity.ok(new LoginSuccessResponseDTO(token));
-
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<RegistrationSuccessDTO> registerUser(@RequestParam String username, @RequestParam String password) throws UsernameTakenException {
-        User u = userService.registerUser(new RegisterRequestDTO(username, password));
+    public @ResponseBody
+    ResponseEntity<RegistrationSuccessDTO> registerUser(@RequestBody RegisterRequestDTO regRequest) throws UsernameTakenException {
+        User u = userService.registerUser(regRequest);
         return ResponseEntity.ok(new RegistrationSuccessDTO(u.getUsername()));
     }
 }
