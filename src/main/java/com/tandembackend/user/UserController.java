@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginSuccessResponseDTO> login(@RequestBody LoginRequestDTO loginRequest) throws MissingParameterException, InvalidPasswordException {
+    public ResponseEntity<LoginSuccessResponseDTO> login(@RequestBody(required = false) LoginRequestDTO loginRequest) throws MissingParameterException, InvalidPasswordException {
         UserDetails userDetails = userService.authenticateUser(loginRequest);
         String token = jwtUtil.generateToken(userDetails.getUsername());
         return ResponseEntity.ok(new LoginSuccessResponseDTO(token));
@@ -34,7 +34,7 @@ public class UserController {
 
     @PostMapping(path = "/register")
     public ResponseEntity<RegistrationSuccessDTO> registerUser(@RequestParam String username, @RequestParam String password) throws UsernameTakenException {
-        User u = userService.registerUser(new RegisterUserDTO(username, password));
+        User u = userService.registerUser(new RegisterRequestDTO(username, password));
         return ResponseEntity.ok(new RegistrationSuccessDTO(u.getUsername()));
     }
 }
