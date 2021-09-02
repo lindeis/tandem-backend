@@ -6,6 +6,7 @@ import com.tandembackend.exception.UsernameTakenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class UserService {
         this.userDetailsService = userDetailsService;
     }
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserDetails authenticateUser(LoginRequestDTO loginRequest) throws MissingParameterException, InvalidPasswordException {
         readLoginRequest(loginRequest);
@@ -70,7 +73,7 @@ public class UserService {
     }
 
     public User registerUser(RegisterUserDTO registerUserDTO) throws UsernameTakenException {
-        User u = new User(registerUserDTO.getUsername(), registerUserDTO.getPassword());
+        User u = new User(registerUserDTO.getUsername(), passwordEncoder.encode(registerUserDTO.getPassword()));
         if (!userRepository.findUserByUsername(u.getUsername()).isEmpty()) {
             throw new UsernameTakenException("The username " + u.getUsername() + " is already taken.");
         }
