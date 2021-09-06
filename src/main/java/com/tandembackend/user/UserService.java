@@ -6,13 +6,12 @@ import com.tandembackend.exception.UsernameTakenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.Principal;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -77,5 +76,13 @@ public class UserService {
             throw new UsernameTakenException("The username " + u.getUsername() + " is already taken.");
         }
         return userRepository.save(u);
+    }
+
+    public User getUserFromPrincipal(Principal principal) {
+        Optional<User> optionalOwner = userRepository.findUserByUsername(principal.getName());
+        if (optionalOwner.isEmpty()) {
+            throw new UsernameNotFoundException("Invalid authorization, no such user found.");
+        }
+        return optionalOwner.get();
     }
 }

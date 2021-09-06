@@ -1,5 +1,7 @@
 package com.tandembackend.exception;
 
+import com.tandembackend.lobby.Room;
+import com.tandembackend.lobby.RoomFailureDTO;
 import com.tandembackend.user.LoginFailureResponseDTO;
 import com.tandembackend.user.RegistrationFailureDTO;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +32,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<LoginFailureResponseDTO> handleUsernameNotFoundException(UsernameNotFoundException e) {
         return ResponseEntity.status(401).body(new LoginFailureResponseDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(UserAlreadyOwnerException.class)
+    public ResponseEntity<RoomFailureDTO> handleUserAlreadyOwnerException(UserAlreadyOwnerException e) {
+        return ResponseEntity.status(409).body(new RoomFailureDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(RoomNotFoundException.class)
+    public ResponseEntity<RoomFailureDTO> handleRoomNotFoundException(RoomNotFoundException e) {
+        return ResponseEntity.status(404).body(new RoomFailureDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(ForbiddenRoomClosingException.class)
+    public ResponseEntity<RoomFailureDTO> handleForbiddenRoomClosingException(ForbiddenRoomClosingException e) {
+        return ResponseEntity.status(403).body(new RoomFailureDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(RoomnameTakenException.class)
+    public ResponseEntity<RoomFailureDTO> handleRoomnameTakenException(RoomnameTakenException e) {
+        return ResponseEntity.status(409).body(new RoomFailureDTO(e.getMessage()));
     }
 }
