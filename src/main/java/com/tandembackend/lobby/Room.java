@@ -19,7 +19,7 @@ public class Room {
     private String name;
 
     @OneToMany(mappedBy = "currentRoom", fetch = FetchType.LAZY)
-    private Set<User> players;
+    private Set<User> users;
 
     public Room(String name) {
         this.name = name;
