@@ -58,7 +58,7 @@ public class RoomService {
             return room;
         }
         if (user.getCurrentRoom() != null) {
-            leaveRoom(user, room);
+            leaveRoom(user, user.getCurrentRoom());
         }
         user.setCurrentRoom(room);
         userRepository.save(user);
