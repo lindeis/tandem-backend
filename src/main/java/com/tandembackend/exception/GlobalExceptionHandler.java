@@ -1,6 +1,6 @@
 package com.tandembackend.exception;
 
-import com.tandembackend.lobby.Room;
+import com.tandembackend.game.PlayerFailureDTO;
 import com.tandembackend.lobby.RoomFailureDTO;
 import com.tandembackend.user.LoginFailureResponseDTO;
 import com.tandembackend.user.RegistrationFailureDTO;
@@ -52,5 +52,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RoomnameTakenException.class)
     public ResponseEntity<RoomFailureDTO> handleRoomnameTakenException(RoomnameTakenException e) {
         return ResponseEntity.status(409).body(new RoomFailureDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidTablePositionException.class)
+    public ResponseEntity<PlayerFailureDTO> handleInvalidTablePositionException(InvalidTablePositionException e) {
+        return ResponseEntity.status(400).body(new PlayerFailureDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(PositionTakenException.class)
+    public ResponseEntity<PlayerFailureDTO> handlePositionTakenException(PositionTakenException e) {
+        return ResponseEntity.status(409).body(new PlayerFailureDTO(e.getMessage()));
     }
 }

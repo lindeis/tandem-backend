@@ -4,9 +4,11 @@ import com.tandembackend.exception.ForbiddenRoomClosingException;
 import com.tandembackend.exception.RoomNotFoundException;
 import com.tandembackend.exception.RoomnameTakenException;
 import com.tandembackend.exception.UserAlreadyOwnerException;
+import com.tandembackend.game.PlayerService;
 import com.tandembackend.user.User;
 import com.tandembackend.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +18,13 @@ import java.util.Optional;
 public class RoomService {
     private RoomRepository roomRepository;
     private UserRepository userRepository;
+    private PlayerService playerService;
 
     @Autowired
-    public RoomService(RoomRepository roomRepository, UserRepository userRepository) {
+    public RoomService(RoomRepository roomRepository, UserRepository userRepository, @Lazy PlayerService playerService) {
         this.roomRepository = roomRepository;
         this.userRepository = userRepository;
+        this.playerService = playerService;
     }
 
     public Iterable<String> getAllRoomNames() {
@@ -33,6 +37,9 @@ public class RoomService {
         }
         if (!roomRepository.findRoomByName(roomName).isEmpty()) {
             throw new RoomnameTakenException("The room name " + roomName + " is already taken.");
+        }
+        if (owner.getCurrentRoom() != null) {
+            leaveRoom(owner, owner.getCurrentRoom());
         }
         Room room = new Room(roomName);
         room = roomRepository.save(room);
@@ -76,12 +83,14 @@ public class RoomService {
     /*  Makes the user leave the room.
         If the user was the last person in the room, the room gets deleted.
         If the user was the owner, a new owner is selected randomly.
+        If the user is sitting at a table, the position is freed.
     */
     private void leaveRoom(User user, Room room) {
         if (user.getCurrentRoom() != room) {
             throw new IllegalArgumentException("User " + user.getUsername() + " trying to leave a room " + room.getName() + (
                     user.getCurrentRoom() == null ? ", but they are not in any room currently." : ", but they are in room " + user.getCurrentRoom().getName()));
         }
+        playerService.leavePosition(user);
         boolean userOwnsRoom = user.isOwnsRoom();
         user.setOwnsRoom(false);
         user.setCurrentRoom(null);
@@ -98,7 +107,7 @@ public class RoomService {
         }
     }
 
-    private Room getRoomByName(String roomName) throws RoomNotFoundException {
+    public Room getRoomByName(String roomName) throws RoomNotFoundException {
         Optional<Room> optionalRoom = roomRepository.findRoomByName(roomName);
         if (optionalRoom.isEmpty()) {
             throw new RoomNotFoundException("Couldn't find a room named " + roomName + ".");
