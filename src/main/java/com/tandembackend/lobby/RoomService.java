@@ -1,6 +1,5 @@
 package com.tandembackend.lobby;
 
-import com.tandembackend.exception.ForbiddenRoomClosingException;
 import com.tandembackend.exception.RoomNotFoundException;
 import com.tandembackend.exception.RoomnameTakenException;
 import com.tandembackend.exception.UserAlreadyOwnerException;
@@ -47,16 +46,6 @@ public class RoomService {
         owner.setOwnsRoom(true);
         userRepository.save(owner);
         return room;
-    }
-
-    public Room closeRoom(String roomName, User user) throws RoomNotFoundException, ForbiddenRoomClosingException {
-        return leaveRoom(roomName, user);
-        /*Room room = getRoomByName(roomName);
-        if (!user.isOwnsRoom() || user.getCurrentRoom() != room) {
-            throw new ForbiddenRoomClosingException("You are not the owner of the room you are trying to close.");
-        }
-        leaveRoom(user, room);
-        return room;*/
     }
 
     public Room joinRoom(String roomName, User user) throws RoomNotFoundException {

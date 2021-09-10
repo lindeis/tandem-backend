@@ -1,7 +1,6 @@
 package com.tandembackend.lobby;
 
 import com.tandembackend.dto.RoomSuccessDTO;
-import com.tandembackend.exception.ForbiddenRoomClosingException;
 import com.tandembackend.exception.RoomNotFoundException;
 import com.tandembackend.exception.RoomnameTakenException;
 import com.tandembackend.exception.UserAlreadyOwnerException;
@@ -35,15 +34,6 @@ public class RoomController {
         return ResponseEntity.ok(new RoomSuccessDTO(
                 roomService.createRoom(roomName, userService.getUserFromPrincipal(principal)),
                 "created"
-        ));
-    }
-
-    @PostMapping(path="/lobby", params="close")
-    public @ResponseBody ResponseEntity<RoomSuccessDTO>
-    closeRoom(@RequestParam("close") String roomName, Principal principal) throws RoomNotFoundException, ForbiddenRoomClosingException {
-        return ResponseEntity.ok(new RoomSuccessDTO(
-                roomService.closeRoom(roomName, userService.getUserFromPrincipal(principal)),
-                "left" // has the same functionality as "leave" currently
         ));
     }
 

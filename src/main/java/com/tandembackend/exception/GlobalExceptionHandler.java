@@ -44,11 +44,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(404).body(new RoomFailureDTO(e.getMessage()));
     }
 
-    @ExceptionHandler(ForbiddenRoomClosingException.class)
-    public ResponseEntity<RoomFailureDTO> handleForbiddenRoomClosingException(ForbiddenRoomClosingException e) {
-        return ResponseEntity.status(403).body(new RoomFailureDTO(e.getMessage()));
-    }
-
     @ExceptionHandler(RoomnameTakenException.class)
     public ResponseEntity<RoomFailureDTO> handleRoomnameTakenException(RoomnameTakenException e) {
         return ResponseEntity.status(409).body(new RoomFailureDTO(e.getMessage()));
