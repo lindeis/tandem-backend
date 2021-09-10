@@ -1,4 +1,4 @@
-package com.tandembackend.game;
+package com.tandembackend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class PlayerFailureDTO {
-    private String message;
+public class LoginRequestDTO {
+    private String username;
+    private String password;
 }

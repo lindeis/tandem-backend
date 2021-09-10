@@ -1,4 +1,4 @@
-package com.tandembackend.user;
+package com.tandembackend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RegistrationFailureDTO {
-    private String message;
+public class RegistrationSuccessDTO {
+    private String username;
 }

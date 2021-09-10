@@ -1,5 +1,6 @@
 package com.tandembackend.lobby;
 
+import com.tandembackend.dto.RoomSuccessDTO;
 import com.tandembackend.exception.ForbiddenRoomClosingException;
 import com.tandembackend.exception.RoomNotFoundException;
 import com.tandembackend.exception.RoomnameTakenException;

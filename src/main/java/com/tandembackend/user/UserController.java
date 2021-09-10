@@ -1,5 +1,9 @@
 package com.tandembackend.user;
 
+import com.tandembackend.dto.LoginRequestDTO;
+import com.tandembackend.dto.LoginSuccessResponseDTO;
+import com.tandembackend.dto.RegisterRequestDTO;
+import com.tandembackend.dto.RegistrationSuccessDTO;
 import com.tandembackend.exception.InvalidPasswordException;
 import com.tandembackend.exception.MissingParameterException;
 import com.tandembackend.exception.UsernameTakenException;

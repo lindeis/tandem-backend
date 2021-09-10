@@ -1,5 +1,7 @@
 package com.tandembackend.game;
 
+import com.tandembackend.dto.PlayerActionSuccessDTO;
+import com.tandembackend.dto.PlayerSuccessDTO;
 import com.tandembackend.exception.InvalidTablePositionException;
 import com.tandembackend.exception.PositionTakenException;
 import com.tandembackend.exception.RoomNotFoundException;
@@ -29,9 +31,9 @@ public class PlayerController {
     }
 
     @PostMapping(path="/room", params="sit")
-    public @ResponseBody ResponseEntity<PlayerSuccessDTO>
+    public @ResponseBody ResponseEntity<PlayerActionSuccessDTO>
     takePosition(@RequestParam("name") String roomName, @RequestParam("sit") String position,  Principal principal) throws RoomNotFoundException, PositionTakenException, InvalidTablePositionException {
-        return ResponseEntity.ok(new PlayerSuccessDTO(playerService.takePosition(
+        return ResponseEntity.ok(new PlayerActionSuccessDTO(playerService.takePosition(
                 roomService.getRoomByName(roomName),
                 TablePosition.fromString(position),
                 userService.getUserFromPrincipal(principal)),
@@ -46,7 +48,7 @@ public class PlayerController {
         if (leftPosition.isEmpty()) {
             return ResponseEntity.ok(new PlayerSuccessDTO("no action"));
         } else {
-            return ResponseEntity.ok(new PlayerSuccessDTO((leftPosition.get()), "left"));
+            return ResponseEntity.ok(new PlayerActionSuccessDTO(leftPosition.get(), "left"));
         }
     }
 }
