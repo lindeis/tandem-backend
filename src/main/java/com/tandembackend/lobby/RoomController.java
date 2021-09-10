@@ -28,18 +28,18 @@ public class RoomController {
         return roomService.getAllRoomNames();
     }
 
-    @PostMapping(path="/lobby", params="create")
+    @PostMapping(path="/lobby/create")
     public @ResponseBody ResponseEntity<RoomSuccessDTO>
-    createRoom(@RequestParam("create") String roomName, Principal principal) throws RoomnameTakenException {
+    createRoom(@RequestParam("room") String roomName, Principal principal) throws RoomnameTakenException {
         return ResponseEntity.ok(new RoomActionSuccessDTO(
                 roomService.createRoom(roomName, userService.getUserFromPrincipal(principal)),
                 "created"
         ));
     }
 
-    @PostMapping(path="/lobby", params="join")
+    @PostMapping(path="/lobby/join")
     public @ResponseBody ResponseEntity<RoomActionSuccessDTO>
-    joinRoom(@RequestParam("join") String roomName, Principal principal) throws RoomNotFoundException {
+    joinRoom(@RequestParam("room") String roomName, Principal principal) throws RoomNotFoundException {
         return ResponseEntity.ok(new RoomActionSuccessDTO(roomService.joinRoom(
                 roomService.getRoomByName(roomName),
                 userService.getUserFromPrincipal(principal)),
@@ -47,9 +47,9 @@ public class RoomController {
         ));
     }
 
-    @PostMapping(path="/lobby", params="leave")
+    @PostMapping(path="/lobby/leave")
     public @ResponseBody ResponseEntity<RoomSuccessDTO>
-    leaveRoom(@RequestParam("leave") String roomName, Principal principal) throws RoomNotFoundException {
+    leaveRoom(@RequestParam("room") String roomName, Principal principal) throws RoomNotFoundException {
         Optional<Room> leftRoom = roomService.leaveRoom(userService.getUserFromPrincipal(principal), roomService.getRoomByName(roomName));
         if (leftRoom.isEmpty()) {
             return ResponseEntity.ok(new RoomSuccessDTO("no action"));

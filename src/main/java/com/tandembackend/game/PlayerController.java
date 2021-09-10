@@ -30,9 +30,9 @@ public class PlayerController {
         this.roomService = roomService;
     }
 
-    @PostMapping(path="/room", params="sit")
+    @PostMapping(path="/room/sit")
     public @ResponseBody ResponseEntity<PlayerActionSuccessDTO>
-    takePosition(@RequestParam("name") String roomName, @RequestParam("sit") String position,  Principal principal) throws RoomNotFoundException, PositionTakenException, InvalidTablePositionException {
+    takePosition(@RequestParam("room") String roomName, @RequestParam("position") String position,  Principal principal) throws RoomNotFoundException, PositionTakenException, InvalidTablePositionException {
         return ResponseEntity.ok(new PlayerActionSuccessDTO(playerService.takePosition(
                 roomService.getRoomByName(roomName),
                 TablePosition.fromString(position),
@@ -41,7 +41,7 @@ public class PlayerController {
         ));
     }
 
-    @PostMapping(path="/room", params="stand")
+    @PostMapping(path="/room/stand")
     public @ResponseBody ResponseEntity<PlayerSuccessDTO>
     leavePosition(Principal principal) throws RoomNotFoundException {
         Optional<Player> leftPosition = playerService.leavePosition(userService.getUserFromPrincipal(principal));
