@@ -75,6 +75,9 @@ public class RoomService {
         user.setCurrentRoom(null);
         userRepository.save(user);
 
+        // Delete room if no more users in it
+        deleteRoomIfEmpty(room);
+
         return Optional.of(room);
     }
 
@@ -84,5 +87,11 @@ public class RoomService {
             throw new RoomNotFoundException("Couldn't find a room named " + roomName + ".");
         }
         return optionalRoom.get();
+    }
+
+    private void deleteRoomIfEmpty(Room room) {
+        if (userRepository.findByCurrentRoom(room).isEmpty()) {
+            roomRepository.delete(room);
+        }
     }
 }
