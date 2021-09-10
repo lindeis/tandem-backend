@@ -37,7 +37,7 @@ public class PlayerService {
         leavePosition(user);
 
         // Change rooms if necessary
-        roomService.joinRoom(room.getName(), user);
+        roomService.joinRoom(room, user);
 
         // Take position
         Player player = new Player(room, position, user);

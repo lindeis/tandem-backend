@@ -1,5 +1,6 @@
 package com.tandembackend.lobby;
 
+import com.tandembackend.dto.RoomActionSuccessDTO;
 import com.tandembackend.dto.RoomSuccessDTO;
 import com.tandembackend.exception.RoomNotFoundException;
 import com.tandembackend.exception.RoomnameTakenException;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 public class RoomController {
@@ -31,17 +33,18 @@ public class RoomController {
     @PostMapping(path="/lobby", params="create")
     public @ResponseBody ResponseEntity<RoomSuccessDTO>
     createRoom(@RequestParam("create") String roomName, Principal principal) throws UsernameNotFoundException, UserAlreadyOwnerException, RoomnameTakenException {
-        return ResponseEntity.ok(new RoomSuccessDTO(
+        return ResponseEntity.ok(new RoomActionSuccessDTO(
                 roomService.createRoom(roomName, userService.getUserFromPrincipal(principal)),
                 "created"
         ));
     }
 
     @PostMapping(path="/lobby", params="join")
-    public @ResponseBody ResponseEntity<RoomSuccessDTO>
+    public @ResponseBody ResponseEntity<RoomActionSuccessDTO>
     joinRoom(@RequestParam("join") String roomName, Principal principal) throws RoomNotFoundException {
-        return ResponseEntity.ok(new RoomSuccessDTO(
-                roomService.joinRoom(roomName, userService.getUserFromPrincipal(principal)),
+        return ResponseEntity.ok(new RoomActionSuccessDTO(roomService.joinRoom(
+                roomService.getRoomByName(roomName),
+                userService.getUserFromPrincipal(principal)),
                 "joined"
         ));
     }
@@ -49,9 +52,11 @@ public class RoomController {
     @PostMapping(path="/lobby", params="leave")
     public @ResponseBody ResponseEntity<RoomSuccessDTO>
     leaveRoom(@RequestParam("leave") String roomName, Principal principal) throws RoomNotFoundException {
-        return ResponseEntity.ok(new RoomSuccessDTO(
-                roomService.leaveRoom(roomName, userService.getUserFromPrincipal(principal)),
-                "left"
-        ));
+        Optional<Room> leftRoom = roomService.leaveRoom(userService.getUserFromPrincipal(principal), roomService.getRoomByName(roomName));
+        if (leftRoom.isEmpty()) {
+            return ResponseEntity.ok(new RoomSuccessDTO("no action"));
+        } else {
+            return ResponseEntity.ok(new RoomActionSuccessDTO(leftRoom.get(), "left"));
+        }
     }
 }

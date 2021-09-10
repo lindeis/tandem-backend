@@ -48,8 +48,7 @@ public class RoomService {
         return room;
     }
 
-    public Room joinRoom(String roomName, User user) throws RoomNotFoundException {
-        Room room = getRoomByName(roomName);
+    public Room joinRoom(Room room, User user) throws RoomNotFoundException {
         if (user.getCurrentRoom() == room) {
             return room;
         }
@@ -61,23 +60,14 @@ public class RoomService {
         return room;
     }
 
-    public Room leaveRoom(String roomName, User user) throws RoomNotFoundException {
-        Room room = getRoomByName(roomName);
-        if (user.getCurrentRoom() == room) {
-            leaveRoom(user, room);
-        }
-        return room;
-    }
-
     /*  Makes the user leave the room.
         If the user was the last person in the room, the room gets deleted.
         If the user was the owner, a new owner is selected randomly.
         If the user is sitting at a table, the position is freed.
     */
-    private void leaveRoom(User user, Room room) {
+    public Optional<Room> leaveRoom(User user, Room room) {
         if (user.getCurrentRoom() != room) {
-            throw new IllegalArgumentException("User " + user.getUsername() + " trying to leave a room " + room.getName() + (
-                    user.getCurrentRoom() == null ? ", but they are not in any room currently." : ", but they are in room " + user.getCurrentRoom().getName()));
+            return Optional.empty();
         }
         playerService.leavePosition(user);
         boolean userOwnsRoom = user.isOwnsRoom();
@@ -94,6 +84,7 @@ public class RoomService {
                 userRepository.save(newOwner);
             }
         }
+        return Optional.of(room);
     }
 
     public Room getRoomByName(String roomName) throws RoomNotFoundException {
