@@ -34,11 +34,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(401).body(new LoginFailureDTO(e.getMessage()));
     }
 
-    @ExceptionHandler(UserAlreadyOwnerException.class)
-    public ResponseEntity<RoomFailureDTO> handleUserAlreadyOwnerException(UserAlreadyOwnerException e) {
-        return ResponseEntity.status(409).body(new RoomFailureDTO(e.getMessage()));
-    }
-
     @ExceptionHandler(RoomNotFoundException.class)
     public ResponseEntity<RoomFailureDTO> handleRoomNotFoundException(RoomNotFoundException e) {
         return ResponseEntity.status(404).body(new RoomFailureDTO(e.getMessage()));

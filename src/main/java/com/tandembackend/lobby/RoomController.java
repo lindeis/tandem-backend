@@ -4,11 +4,9 @@ import com.tandembackend.dto.RoomActionSuccessDTO;
 import com.tandembackend.dto.RoomSuccessDTO;
 import com.tandembackend.exception.RoomNotFoundException;
 import com.tandembackend.exception.RoomnameTakenException;
-import com.tandembackend.exception.UserAlreadyOwnerException;
 import com.tandembackend.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -32,7 +30,7 @@ public class RoomController {
 
     @PostMapping(path="/lobby", params="create")
     public @ResponseBody ResponseEntity<RoomSuccessDTO>
-    createRoom(@RequestParam("create") String roomName, Principal principal) throws UsernameNotFoundException, UserAlreadyOwnerException, RoomnameTakenException {
+    createRoom(@RequestParam("create") String roomName, Principal principal) throws RoomnameTakenException {
         return ResponseEntity.ok(new RoomActionSuccessDTO(
                 roomService.createRoom(roomName, userService.getUserFromPrincipal(principal)),
                 "created"

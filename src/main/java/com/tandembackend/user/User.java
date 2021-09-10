@@ -21,7 +21,6 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomname")
     private Room currentRoom;
-    private boolean ownsRoom = false;
 
     public User (String username, String password) {
         this.username = username;

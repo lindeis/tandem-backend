@@ -2,7 +2,6 @@ package com.tandembackend.lobby;
 
 import com.tandembackend.exception.RoomNotFoundException;
 import com.tandembackend.exception.RoomnameTakenException;
-import com.tandembackend.exception.UserAlreadyOwnerException;
 import com.tandembackend.game.PlayerService;
 import com.tandembackend.user.User;
 import com.tandembackend.user.UserRepository;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,60 +28,53 @@ public class RoomService {
         return roomRepository.getAllRoomNames();
     }
 
-    public Room createRoom(String roomName, User owner) throws UserAlreadyOwnerException, RoomnameTakenException {
-        if (owner.isOwnsRoom()) {
-            throw new UserAlreadyOwnerException("Close room " + owner.getCurrentRoom().getName() + " before trying to open a new one.");
-        }
+    public Room createRoom(String roomName, User user) throws RoomnameTakenException {
+        // Check whether room name already exists
         if (!roomRepository.findRoomByName(roomName).isEmpty()) {
             throw new RoomnameTakenException("The room name " + roomName + " is already taken.");
         }
-        if (owner.getCurrentRoom() != null) {
-            leaveRoom(owner, owner.getCurrentRoom());
-        }
+
+        // Create and save the new room
         Room room = new Room(roomName);
         room = roomRepository.save(room);
-        owner.setCurrentRoom(room);
-        owner.setOwnsRoom(true);
-        userRepository.save(owner);
+
+        // Join new room
+        joinRoom(room, user);
+
         return room;
     }
 
-    public Room joinRoom(Room room, User user) throws RoomNotFoundException {
+    public Room joinRoom(Room room, User user) {
+        // If already in the room, do nothing
         if (user.getCurrentRoom() == room) {
             return room;
         }
+
+        // Leave previous room, if any
         if (user.getCurrentRoom() != null) {
             leaveRoom(user, user.getCurrentRoom());
         }
+
+        // Join new room and save user
         user.setCurrentRoom(room);
         userRepository.save(user);
+
         return room;
     }
 
-    /*  Makes the user leave the room.
-        If the user was the last person in the room, the room gets deleted.
-        If the user was the owner, a new owner is selected randomly.
-        If the user is sitting at a table, the position is freed.
-    */
     public Optional<Room> leaveRoom(User user, Room room) {
+        // If not in the room, do nothing
         if (user.getCurrentRoom() != room) {
             return Optional.empty();
         }
+
+        // Stand up from table
         playerService.leavePosition(user);
-        boolean userOwnsRoom = user.isOwnsRoom();
-        user.setOwnsRoom(false);
+
+        // Leave room and save user
         user.setCurrentRoom(null);
         userRepository.save(user);
-        if (userOwnsRoom) {
-            List<User> usersInRoom = userRepository.findByCurrentRoom(room);
-            if (usersInRoom.isEmpty()) {
-                roomRepository.delete(room);
-            } else {
-                User newOwner = usersInRoom.get(0);
-                newOwner.setOwnsRoom(true);
-                userRepository.save(newOwner);
-            }
-        }
+
         return Optional.of(room);
     }
 
