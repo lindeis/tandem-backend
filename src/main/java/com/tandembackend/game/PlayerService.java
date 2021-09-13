@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,6 +22,14 @@ public class PlayerService {
     public PlayerService(PlayerRepository playerRepository, @Lazy RoomService roomService) {
         this.playerRepository = playerRepository;
         this.roomService = roomService;
+    }
+
+    public Map<TablePosition, User> getPlayersInRoom(Room room) {
+        Map<TablePosition, User> positions = new HashMap<>();
+        for(Player player : playerRepository.findPlayerByRoom(room)) {
+            positions.put(player.getPosition(), player.getUser());
+        }
+        return positions;
     }
 
     public Player takePosition(Room room, TablePosition position, User user) throws PositionTakenException, RoomNotFoundException {

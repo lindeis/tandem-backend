@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface PlayerRepository extends CrudRepository<Player, PlayerId> {
     Optional<Player> findPlayerByUser(User user);
     Optional<Player> findPlayerByRoomAndPosition(Room room, TablePosition position);
+    Iterable<Player> findPlayerByRoom(Room room);
 }

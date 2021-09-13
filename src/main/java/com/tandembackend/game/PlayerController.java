@@ -2,6 +2,7 @@ package com.tandembackend.game;
 
 import com.tandembackend.dto.PlayerActionSuccessDTO;
 import com.tandembackend.dto.PlayerSuccessDTO;
+import com.tandembackend.dto.RoomInformationDTO;
 import com.tandembackend.exception.InvalidTablePositionException;
 import com.tandembackend.exception.PositionTakenException;
 import com.tandembackend.exception.RoomNotFoundException;
@@ -9,10 +10,7 @@ import com.tandembackend.lobby.RoomService;
 import com.tandembackend.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -28,6 +26,14 @@ public class PlayerController {
         this.playerService = playerService;
         this.userService = userService;
         this.roomService = roomService;
+    }
+
+    @GetMapping(path="/room")
+    public @ResponseBody ResponseEntity<RoomInformationDTO>
+    getRoomInformation(@RequestParam("room") String roomName) throws RoomNotFoundException {
+        return ResponseEntity.ok(new RoomInformationDTO(
+            playerService.getPlayersInRoom(roomService.getRoomByName(roomName))
+        ));
     }
 
     @PostMapping(path="/room/sit")
