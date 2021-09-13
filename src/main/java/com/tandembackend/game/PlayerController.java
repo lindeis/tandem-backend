@@ -49,7 +49,7 @@ public class PlayerController {
 
     @PostMapping(path="/room/stand")
     public @ResponseBody ResponseEntity<PlayerSuccessDTO>
-    leavePosition(Principal principal) throws RoomNotFoundException {
+    leavePosition(Principal principal) {
         Optional<Player> leftPosition = playerService.leavePosition(userService.getUserFromPrincipal(principal));
         if (leftPosition.isEmpty()) {
             return ResponseEntity.ok(new PlayerSuccessDTO("no action"));
