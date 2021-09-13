@@ -1,9 +1,6 @@
 package com.tandembackend.user;
 
-import com.tandembackend.dto.LoginRequestDTO;
-import com.tandembackend.dto.LoginSuccessResponseDTO;
-import com.tandembackend.dto.RegisterRequestDTO;
-import com.tandembackend.dto.RegistrationSuccessDTO;
+import com.tandembackend.dto.*;
 import com.tandembackend.exception.InvalidPasswordException;
 import com.tandembackend.exception.MissingParameterException;
 import com.tandembackend.exception.UsernameTakenException;
@@ -11,10 +8,9 @@ import com.tandembackend.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 public class UserController {
@@ -26,6 +22,11 @@ public class UserController {
     public UserController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<UserInformationDTO> getUserFromPrincipal(Principal principal) {
+        return ResponseEntity.ok(new UserInformationDTO(userService.getUserFromPrincipal(principal)));
     }
 
     @PostMapping("/login")
