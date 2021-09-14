@@ -1,5 +1,6 @@
 package com.tandembackend.lobby;
 
+import com.tandembackend.exception.RoomNameTooShortException;
 import com.tandembackend.exception.RoomNotFoundException;
 import com.tandembackend.exception.RoomnameTakenException;
 import com.tandembackend.game.PlayerService;
@@ -28,11 +29,14 @@ public class RoomService {
         return roomRepository.getAllRoomNames();
     }
 
-    public Room createRoom(String roomName, User user) throws RoomnameTakenException {
+    public Room createRoom(String roomName, User user) throws RoomnameTakenException, RoomNameTooShortException {
         // Check whether room name already exists
         if (!roomRepository.findRoomByName(roomName).isEmpty()) {
             throw new RoomnameTakenException("The room name " + roomName + " is already taken.");
         }
+
+        // Check whether the user entered a valid room name
+        checkIfRoomNameValid(roomName);
 
         // Create and save the new room
         Room room = new Room(roomName);
@@ -92,6 +96,12 @@ public class RoomService {
     private void deleteRoomIfEmpty(Room room) {
         if (userRepository.findByCurrentRoom(room).isEmpty()) {
             roomRepository.delete(room);
+        }
+    }
+
+    private void checkIfRoomNameValid(String roomName) throws RoomNameTooShortException {
+        if (roomName.length() < 3) {
+            throw new RoomNameTooShortException("Your room name has to be at least 3 characters long.");
         }
     }
 }

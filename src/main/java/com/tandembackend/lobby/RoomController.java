@@ -2,6 +2,7 @@ package com.tandembackend.lobby;
 
 import com.tandembackend.dto.RoomActionSuccessDTO;
 import com.tandembackend.dto.RoomSuccessDTO;
+import com.tandembackend.exception.RoomNameTooShortException;
 import com.tandembackend.exception.RoomNotFoundException;
 import com.tandembackend.exception.RoomnameTakenException;
 import com.tandembackend.user.UserService;
@@ -30,7 +31,7 @@ public class RoomController {
 
     @PostMapping(path="/lobby/create")
     public @ResponseBody ResponseEntity<RoomSuccessDTO>
-    createRoom(@RequestParam("room") String roomName, Principal principal) throws RoomnameTakenException {
+    createRoom(@RequestParam("room") String roomName, Principal principal) throws RoomnameTakenException, RoomNameTooShortException {
         return ResponseEntity.ok(new RoomActionSuccessDTO(
                 roomService.createRoom(roomName, userService.getUserFromPrincipal(principal)),
                 "created"

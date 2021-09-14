@@ -53,4 +53,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<PlayerFailureDTO> handlePositionTakenException(PositionTakenException e) {
         return ResponseEntity.status(409).body(new PlayerFailureDTO(e.getMessage()));
     }
+
+    @ExceptionHandler(RoomNameTooShortException.class)
+    public ResponseEntity<RoomFailureDTO> handleRoomNameTooShortException(RoomNameTooShortException e) {
+        return ResponseEntity.status(422).body(new RoomFailureDTO(e.getMessage()));
+    }
 }
