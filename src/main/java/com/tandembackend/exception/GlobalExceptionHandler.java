@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidTablePositionException.class)
     public ResponseEntity<PlayerFailureDTO> handleInvalidTablePositionException(InvalidTablePositionException e) {
-        return ResponseEntity.status(400).body(new PlayerFailureDTO(e.getMessage()));
+        return ResponseEntity.status(422).body(new PlayerFailureDTO(e.getMessage()));
     }
 
     @ExceptionHandler(PositionTakenException.class)
