@@ -2,9 +2,7 @@ package com.tandembackend.user;
 
 import com.tandembackend.dto.LoginRequestDTO;
 import com.tandembackend.dto.RegisterRequestDTO;
-import com.tandembackend.exception.InvalidPasswordException;
-import com.tandembackend.exception.MissingParameterException;
-import com.tandembackend.exception.UsernameTakenException;
+import com.tandembackend.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,7 +27,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDetails authenticateUser(LoginRequestDTO loginRequest) throws MissingParameterException, InvalidPasswordException {
+    public UserDetails authenticateUser(LoginRequestDTO loginRequest) throws MissingParameterException, IncorrectPasswordException {
         readLoginRequest(loginRequest);
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         checkPassword(loginRequest, userDetails);
@@ -66,18 +64,17 @@ public class UserService {
         }
     }
 
-    private void checkPassword(LoginRequestDTO loginRequest, UserDetails userDetails) throws InvalidPasswordException {
+    private void checkPassword(LoginRequestDTO loginRequest, UserDetails userDetails) throws IncorrectPasswordException {
         if (!passwordEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
-            throw new InvalidPasswordException();
+            throw new IncorrectPasswordException();
         }
     }
 
-    public User registerUser(RegisterRequestDTO registerRequestDTO) throws UsernameTakenException {
-        User u = new User(registerRequestDTO.getUsername(), passwordEncoder.encode(registerRequestDTO.getPassword()));
-        if (!userRepository.findUserByUsername(u.getUsername()).isEmpty()) {
-            throw new UsernameTakenException("The username " + u.getUsername() + " is already taken.");
-        }
-        return userRepository.save(u);
+    public User registerUser(RegisterRequestDTO registerRequestDTO) throws UsernameTakenException, InvalidUsernameException, InvalidPasswordException {
+        checkIfUsernameValid(registerRequestDTO.getUsername());
+        checkIfPasswordValid(registerRequestDTO.getPassword());
+        User user = new User(registerRequestDTO.getUsername(), passwordEncoder.encode(registerRequestDTO.getPassword()));
+        return userRepository.save(user);
     }
 
     public User getUserFromPrincipal(Principal principal) {
@@ -86,5 +83,23 @@ public class UserService {
             throw new UsernameNotFoundException("Invalid authorization, no such user found.");
         }
         return optionalOwner.get();
+    }
+
+    private void checkIfUsernameValid(String username) throws InvalidUsernameException, UsernameTakenException {
+        if (username.length() < 3) {
+            throw new InvalidUsernameException("The username should be at least 3 characters long.");
+        }
+        if (username.contains(" ")) {
+            throw new InvalidUsernameException("The username cannot contain spaces.");
+        }
+        if (!userRepository.findUserByUsername(username).isEmpty()) {
+            throw new UsernameTakenException("The username " + username + " is already taken.");
+        }
+    }
+
+    private void checkIfPasswordValid(String password) throws InvalidPasswordException {
+        if (password.length() < 3) {
+            throw new InvalidPasswordException("The password should be at least 3 characters long.");
+        }
     }
 }

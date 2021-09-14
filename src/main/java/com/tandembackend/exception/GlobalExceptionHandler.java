@@ -19,8 +19,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(409).body(new RegistrationFailureDTO(e.getMessage()));
     }
 
-    @ExceptionHandler(InvalidPasswordException.class)
-    public ResponseEntity<LoginFailureDTO> handleInvalidPasswordException(InvalidPasswordException e) {
+    @ExceptionHandler(IncorrectPasswordException.class)
+    public ResponseEntity<LoginFailureDTO> handleInvalidPasswordException(IncorrectPasswordException e) {
         return ResponseEntity.status(401).body(new LoginFailureDTO(e.getErrorMessage()));
     }
 
@@ -57,5 +57,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RoomNameTooShortException.class)
     public ResponseEntity<RoomFailureDTO> handleRoomNameTooShortException(RoomNameTooShortException e) {
         return ResponseEntity.status(422).body(new RoomFailureDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<RegistrationFailureDTO> handleInvalidPasswordException(InvalidPasswordException e) {
+        return ResponseEntity.status(422).body(new RegistrationFailureDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidUsernameException.class)
+    public ResponseEntity<RegistrationFailureDTO> handleInvalidUsernameException(InvalidUsernameException e) {
+        return ResponseEntity.status(422).body(new RegistrationFailureDTO(e.getMessage()));
     }
 }

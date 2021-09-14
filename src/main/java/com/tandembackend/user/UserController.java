@@ -1,9 +1,7 @@
 package com.tandembackend.user;
 
 import com.tandembackend.dto.*;
-import com.tandembackend.exception.InvalidPasswordException;
-import com.tandembackend.exception.MissingParameterException;
-import com.tandembackend.exception.UsernameTakenException;
+import com.tandembackend.exception.*;
 import com.tandembackend.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginSuccessResponseDTO> login(@RequestBody(required = false) LoginRequestDTO loginRequest) throws MissingParameterException, InvalidPasswordException {
+    public ResponseEntity<LoginSuccessResponseDTO> login(@RequestBody(required = false) LoginRequestDTO loginRequest) throws MissingParameterException, IncorrectPasswordException {
         UserDetails userDetails = userService.authenticateUser(loginRequest);
         String token = jwtUtil.generateToken(userDetails.getUsername());
         return ResponseEntity.ok(new LoginSuccessResponseDTO(token));
@@ -38,7 +36,7 @@ public class UserController {
 
     @PostMapping(path = "/register")
     public @ResponseBody
-    ResponseEntity<RegistrationSuccessDTO> registerUser(@RequestBody RegisterRequestDTO regRequest) throws UsernameTakenException {
+    ResponseEntity<RegistrationSuccessDTO> registerUser(@RequestBody RegisterRequestDTO regRequest) throws UsernameTakenException, InvalidUsernameException, InvalidPasswordException {
         User u = userService.registerUser(regRequest);
         return ResponseEntity.ok(new RegistrationSuccessDTO(u.getUsername()));
     }
