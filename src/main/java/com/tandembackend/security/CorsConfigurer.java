@@ -28,7 +28,7 @@ public class CorsConfigurer extends OncePerRequestFilter {
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.addHeader("Access-Control-Max-Age", "36000");
         response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, "
-                        + "Access-Control-Request-Headers, Authorization");
+                        + "Access-Control-Request-Headers, Authorization, tandem-token");
         response.addHeader("Access-Control-Expose-Headers", "*");
         response.addHeader("Access-Control-Allow-Credentials", "true");
 
