@@ -10,10 +10,10 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class RoomInformationDTO {
+public class TableInformationDTO {
     private Map<String, String> players; // Key: Table position. Value: Username.
 
-    public RoomInformationDTO(Map<TablePosition, User> players) {
+    public TableInformationDTO(Map<TablePosition, User> players) {
         this.players = new HashMap<String, String>();
         for (Map.Entry<TablePosition, User> entry : players.entrySet()) {
             this.players.put(entry.getKey().toString(), entry.getValue().getUsername());

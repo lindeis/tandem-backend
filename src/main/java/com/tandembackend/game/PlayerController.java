@@ -2,7 +2,7 @@ package com.tandembackend.game;
 
 import com.tandembackend.dto.PlayerActionSuccessDTO;
 import com.tandembackend.dto.PlayerSuccessDTO;
-import com.tandembackend.dto.RoomInformationDTO;
+import com.tandembackend.dto.TableInformationDTO;
 import com.tandembackend.exception.InvalidTablePositionException;
 import com.tandembackend.exception.PositionTakenException;
 import com.tandembackend.exception.RoomNotFoundException;
@@ -29,9 +29,9 @@ public class PlayerController {
     }
 
     @GetMapping(path="/room")
-    public @ResponseBody ResponseEntity<RoomInformationDTO>
+    public @ResponseBody ResponseEntity<TableInformationDTO>
     getRoomInformation(@RequestParam("room") String roomName) throws RoomNotFoundException {
-        return ResponseEntity.ok(new RoomInformationDTO(
+        return ResponseEntity.ok(new TableInformationDTO(
             playerService.getPlayersInRoom(roomService.getRoomByName(roomName))
         ));
     }
