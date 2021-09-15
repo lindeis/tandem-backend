@@ -25,8 +25,8 @@ public class RoomService {
         this.playerService = playerService;
     }
 
-    public Iterable<String> getAllRoomNames() {
-        return roomRepository.getAllRoomNames();
+    public Iterable<Room> getAllRooms() {
+        return roomRepository.getAllRooms();
     }
 
     public Room createRoom(String roomName, User user) throws RoomnameTakenException, RoomNameTooShortException {

@@ -3,6 +3,7 @@ package com.tandembackend.user;
 import com.tandembackend.dto.LoginRequestDTO;
 import com.tandembackend.dto.RegisterRequestDTO;
 import com.tandembackend.exception.*;
+import com.tandembackend.lobby.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -83,6 +84,10 @@ public class UserService {
             throw new UsernameNotFoundException("Invalid authorization, no such user found.");
         }
         return optionalOwner.get();
+    }
+
+    public List<User> usersInRoom(Room room) {
+        return userRepository.findByCurrentRoom(room);
     }
 
     private void checkIfUsernameValid(String username) throws InvalidUsernameException, UsernameTakenException {
