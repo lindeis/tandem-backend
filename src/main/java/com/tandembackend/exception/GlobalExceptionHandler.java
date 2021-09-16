@@ -1,9 +1,8 @@
 package com.tandembackend.exception;
 
+import com.tandembackend.dto.AuthFailureDTO;
 import com.tandembackend.dto.PlayerFailureDTO;
 import com.tandembackend.dto.RoomFailureDTO;
-import com.tandembackend.dto.LoginFailureDTO;
-import com.tandembackend.dto.RegistrationFailureDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,23 +14,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameTakenException.class)
-    public ResponseEntity<RegistrationFailureDTO> handleUsernameTakenException(UsernameTakenException e) {
-        return ResponseEntity.status(409).body(new RegistrationFailureDTO(e.getMessage()));
+    public ResponseEntity<AuthFailureDTO> handleUsernameTakenException(UsernameTakenException e) {
+        return ResponseEntity.status(409).body(new AuthFailureDTO(e.getMessage()));
     }
 
     @ExceptionHandler(IncorrectPasswordException.class)
-    public ResponseEntity<LoginFailureDTO> handleInvalidPasswordException(IncorrectPasswordException e) {
-        return ResponseEntity.status(401).body(new LoginFailureDTO(e.getErrorMessage()));
+    public ResponseEntity<AuthFailureDTO> handleInvalidPasswordException(IncorrectPasswordException e) {
+        return ResponseEntity.status(401).body(new AuthFailureDTO(e.getErrorMessage()));
     }
 
     @ExceptionHandler(MissingParameterException.class)
-    public ResponseEntity<LoginFailureDTO> handleMissingParameterException(MissingParameterException e) {
-        return ResponseEntity.status(400).body(new LoginFailureDTO(e.getMessage()));
+    public ResponseEntity<AuthFailureDTO> handleMissingParameterException(MissingParameterException e) {
+        return ResponseEntity.status(400).body(new AuthFailureDTO(e.getMessage()));
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<LoginFailureDTO> handleUsernameNotFoundException(UsernameNotFoundException e) {
-        return ResponseEntity.status(401).body(new LoginFailureDTO(e.getMessage()));
+    public ResponseEntity<AuthFailureDTO> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        return ResponseEntity.status(401).body(new AuthFailureDTO(e.getMessage()));
     }
 
     @ExceptionHandler(RoomNotFoundException.class)
@@ -60,12 +59,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidPasswordException.class)
-    public ResponseEntity<RegistrationFailureDTO> handleInvalidPasswordException(InvalidPasswordException e) {
-        return ResponseEntity.status(422).body(new RegistrationFailureDTO(e.getMessage()));
+    public ResponseEntity<AuthFailureDTO> handleInvalidPasswordException(InvalidPasswordException e) {
+        return ResponseEntity.status(422).body(new AuthFailureDTO(e.getMessage()));
     }
 
     @ExceptionHandler(InvalidUsernameException.class)
-    public ResponseEntity<RegistrationFailureDTO> handleInvalidUsernameException(InvalidUsernameException e) {
-        return ResponseEntity.status(422).body(new RegistrationFailureDTO(e.getMessage()));
+    public ResponseEntity<AuthFailureDTO> handleInvalidUsernameException(InvalidUsernameException e) {
+        return ResponseEntity.status(422).body(new AuthFailureDTO(e.getMessage()));
     }
 }

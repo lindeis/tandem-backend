@@ -36,7 +36,7 @@ public class UserController {
 
     @PostMapping(path = "/register")
     public @ResponseBody
-    ResponseEntity<RegistrationSuccessDTO> registerUser(@RequestBody RegisterRequestDTO regRequest) throws UsernameTakenException, InvalidUsernameException, InvalidPasswordException {
+    ResponseEntity<RegistrationSuccessDTO> registerUser(@RequestBody(required = false) RegisterRequestDTO regRequest) throws UsernameTakenException, InvalidUsernameException, InvalidPasswordException, MissingParameterException {
         User u = userService.registerUser(regRequest);
         return ResponseEntity.ok(new RegistrationSuccessDTO(u.getUsername()));
     }

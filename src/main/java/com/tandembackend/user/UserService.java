@@ -1,5 +1,6 @@
 package com.tandembackend.user;
 
+import com.tandembackend.dto.AuthRequestDTO;
 import com.tandembackend.dto.LoginRequestDTO;
 import com.tandembackend.dto.RegisterRequestDTO;
 import com.tandembackend.exception.*;
@@ -29,19 +30,19 @@ public class UserService {
     }
 
     public UserDetails authenticateUser(LoginRequestDTO loginRequest) throws MissingParameterException, IncorrectPasswordException {
-        readLoginRequest(loginRequest);
+        readAuthRequest(loginRequest);
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         checkPassword(loginRequest, userDetails);
         return userDetails;
     }
 
-    private void readLoginRequest(LoginRequestDTO loginRequest)
+    private void readAuthRequest(AuthRequestDTO authRequest)
             throws MissingParameterException {
-        if (loginRequest == null) {
+        if (authRequest == null) {
             throw new MissingParameterException("Missing parameter(s): password, username!");
         }
 
-        Map<String, String> loginDetailsHM = loginValidate(loginRequest.getUsername(), loginRequest.getPassword());
+        Map<String, String> loginDetailsHM = loginValidate(authRequest.getUsername(), authRequest.getPassword());
         setupValidate(loginDetailsHM);
     }
 
@@ -71,7 +72,8 @@ public class UserService {
         }
     }
 
-    public User registerUser(RegisterRequestDTO registerRequestDTO) throws UsernameTakenException, InvalidUsernameException, InvalidPasswordException {
+    public User registerUser(RegisterRequestDTO registerRequestDTO) throws UsernameTakenException, InvalidUsernameException, InvalidPasswordException, MissingParameterException {
+        readAuthRequest(registerRequestDTO);
         checkIfUsernameValid(registerRequestDTO.getUsername());
         checkIfPasswordValid(registerRequestDTO.getPassword());
         User user = new User(registerRequestDTO.getUsername(), passwordEncoder.encode(registerRequestDTO.getPassword()));
