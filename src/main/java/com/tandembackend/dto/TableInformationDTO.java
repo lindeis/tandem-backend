@@ -4,6 +4,7 @@ import com.tandembackend.game.TablePosition;
 import com.tandembackend.user.User;
 import lombok.Getter;
 import lombok.Setter;
+import org.owasp.encoder.Encode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class TableInformationDTO {
     public TableInformationDTO(Map<TablePosition, User> players) {
         this.players = new HashMap<String, String>();
         for (Map.Entry<TablePosition, User> entry : players.entrySet()) {
-            this.players.put(entry.getKey().toString(), entry.getValue().getUsername());
+            this.players.put(entry.getKey().toString(), Encode.forHtml(entry.getValue().getUsername()));
         }
     }
 }
