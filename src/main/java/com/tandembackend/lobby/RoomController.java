@@ -1,6 +1,7 @@
 package com.tandembackend.lobby;
 
 import com.tandembackend.dto.RoomActionSuccessDTO;
+import com.tandembackend.dto.RoomCreationRequestDTO;
 import com.tandembackend.dto.RoomInformationDTO;
 import com.tandembackend.dto.RoomSuccessDTO;
 import com.tandembackend.exception.RoomNameTooShortException;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +47,9 @@ public class RoomController {
 
     @PostMapping(path="/lobby/create")
     public @ResponseBody ResponseEntity<RoomSuccessDTO>
-    createRoom(@RequestParam("room") String roomName, Principal principal) throws RoomnameTakenException, RoomNameTooShortException {
+    createRoom(Principal principal, @RequestBody @Valid RoomCreationRequestDTO room) throws RoomnameTakenException, RoomNameTooShortException {
         return ResponseEntity.ok(new RoomActionSuccessDTO(
-                roomService.createRoom(roomName, userService.getUserFromPrincipal(principal)),
+                roomService.createRoom(room.getName(), userService.getUserFromPrincipal(principal)),
                 "created"
         ));
     }

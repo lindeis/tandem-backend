@@ -35,9 +35,6 @@ public class RoomService {
             throw new RoomnameTakenException("The room name " + roomName + " is already taken.");
         }
 
-        // Check whether the user entered a valid room name
-        checkIfRoomNameValid(roomName);
-
         // Create and save the new room
         Room room = new Room(roomName);
         room = roomRepository.save(room);
@@ -96,12 +93,6 @@ public class RoomService {
     private void deleteRoomIfEmpty(Room room) {
         if (userRepository.findByCurrentRoom(room).isEmpty()) {
             roomRepository.delete(room);
-        }
-    }
-
-    private void checkIfRoomNameValid(String roomName) throws RoomNameTooShortException {
-        if (roomName.length() < 3) {
-            throw new RoomNameTooShortException("Your room name has to be at least 3 characters long.");
         }
     }
 }
