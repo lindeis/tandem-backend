@@ -14,6 +14,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class RoomCreationRequestDTO {
     @Size(min = 3, max = 255, message = "The room name has to be between 3 and 255 characters long.")
-    @Pattern(regexp = "[a-zA-Z0-9 _.]+", message = "The room name may only contain alphanumerical characters, spaces, underscores and periods.")
+    @Pattern(regexp = "[a-zA-Z0-9_.]+", message = "The room name may only contain alphanumerical characters, underscores and periods.")
     private String name;
 }
