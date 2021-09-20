@@ -72,10 +72,11 @@ public class UserService {
         }
     }
 
-    public User registerUser(RegisterRequestDTO registerRequestDTO) throws UsernameTakenException, InvalidUsernameException, InvalidPasswordException, MissingParameterException {
+    public User registerUser(RegisterRequestDTO registerRequestDTO) throws UsernameTakenException, MissingParameterException {
         readAuthRequest(registerRequestDTO);
-        checkIfUsernameValid(registerRequestDTO.getUsername());
-        checkIfPasswordValid(registerRequestDTO.getPassword());
+        if (!userRepository.findUserByUsername(registerRequestDTO.getUsername()).isEmpty()) {
+            throw new UsernameTakenException("The username " + registerRequestDTO.getUsername() + " is already taken.");
+        }
         User user = new User(registerRequestDTO.getUsername(), passwordEncoder.encode(registerRequestDTO.getPassword()));
         return userRepository.save(user);
     }
@@ -90,23 +91,5 @@ public class UserService {
 
     public List<User> usersInRoom(Room room) {
         return userRepository.findByCurrentRoom(room);
-    }
-
-    private void checkIfUsernameValid(String username) throws InvalidUsernameException, UsernameTakenException {
-        if (username.length() < 3) {
-            throw new InvalidUsernameException("The username should be at least 3 characters long.");
-        }
-        if (username.contains(" ")) {
-            throw new InvalidUsernameException("The username cannot contain spaces.");
-        }
-        if (!userRepository.findUserByUsername(username).isEmpty()) {
-            throw new UsernameTakenException("The username " + username + " is already taken.");
-        }
-    }
-
-    private void checkIfPasswordValid(String password) throws InvalidPasswordException {
-        if (password.length() < 3) {
-            throw new InvalidPasswordException("The password should be at least 3 characters long.");
-        }
     }
 }
